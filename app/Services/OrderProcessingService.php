@@ -10,19 +10,24 @@ use App\Models\Order;
  */
 class OrderProcessingService
 {
-    public function markProcessedIfPending(int $orderId): void
+    /**
+     * @return bool True if a row was loaded, was pending, and was saved as processed.
+     */
+    public function markProcessedIfPending(int $orderId): bool
     {
         $order = Order::query()->find($orderId);
 
         if ($order === null) {
-            return;
+            return false;
         }
 
         if ($order->status !== OrderStatus::Pending) {
-            return;
+            return false;
         }
 
         $order->status = OrderStatus::Processed;
         $order->save();
+
+        return true;
     }
 }

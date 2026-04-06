@@ -16,15 +16,26 @@ class OrderProcessingServiceTest extends TestCase
     {
         $order = Order::factory()->create(['status' => OrderStatus::Pending]);
 
-        app(OrderProcessingService::class)->markProcessedIfPending($order->id);
+        $changed = app(OrderProcessingService::class)->markProcessedIfPending($order->id);
 
+        $this->assertTrue($changed);
         $this->assertSame(OrderStatus::Processed, $order->fresh()->status);
     }
 
     public function test_missing_order_is_no_op(): void
     {
-        app(OrderProcessingService::class)->markProcessedIfPending(999_999);
+        $changed = app(OrderProcessingService::class)->markProcessedIfPending(999_999);
 
-        $this->assertTrue(true);
+        $this->assertFalse($changed);
+    }
+
+    public function test_non_pending_order_is_no_op(): void
+    {
+        $order = Order::factory()->create(['status' => OrderStatus::Processed]);
+
+        $changed = app(OrderProcessingService::class)->markProcessedIfPending($order->id);
+
+        $this->assertFalse($changed);
+        $this->assertSame(OrderStatus::Processed, $order->fresh()->status);
     }
 }

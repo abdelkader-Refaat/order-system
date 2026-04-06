@@ -23,6 +23,8 @@ services:
       RABBITMQ_QUEUE: orders_queue
       CACHE_STORE: ${CACHE_STORE:-file}
       SESSION_DRIVER: ${SESSION_DRIVER:-cookie}
+      # Host .env often sets skip=true for Herd — in Compose the API must publish or the worker has nothing to do.
+      ORDERS_SKIP_QUEUE_PUBLISH: 'false'
     env_file:
       - .env
     depends_on:
@@ -49,6 +51,7 @@ services:
       RABBITMQ_QUEUE: orders_queue
       CACHE_STORE: ${CACHE_STORE:-file}
       SESSION_DRIVER: ${SESSION_DRIVER:-cookie}
+      ORDERS_SKIP_QUEUE_PUBLISH: 'false'
     env_file:
       - .env
     depends_on:

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Contracts\OrdersQueuePublisherInterface;
+use App\Queue\NullOrdersQueuePublisher;
+use App\Queue\RabbitMqOrdersQueuePublisher;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(OrdersQueuePublisherInterface::class, function () {
+            return config('orders.skip_queue_publish')
+                ? new NullOrdersQueuePublisher
+                : new RabbitMqOrdersQueuePublisher;
+        });
     }
 
     /**
@@ -19,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }

@@ -88,6 +88,35 @@ return [
                 'deferred',
             ],
         ],
+        /*
+        | Host: 127.0.0.1 on the host OS; service name "rabbitmq" on Docker Compose.
+        | If .env has 127.0.0.1 but PHP runs inside a container, we default to "rabbitmq" (loopback
+        | in a container is not the broker). Clear config cache after changing env (docker entrypoint does).
+        */
+        'rabbitmq' => [
+
+            'driver' => 'rabbitmq',
+            'hosts' => [
+                [
+                    'host' => (static function (): string {
+                        $host = env('RABBITMQ_HOST', '127.0.0.1');
+                        $host = is_string($host) && $host !== '' ? $host : '127.0.0.1';
+
+                        if (file_exists('/.dockerenv') && in_array($host, ['127.0.0.1', 'localhost'], true)) {
+                            return 'rabbitmq';
+                        }
+
+                        return $host;
+                    })(),
+                    'port' => (int) env('RABBITMQ_PORT', 5672),
+                    'user' => env('RABBITMQ_USER', 'guest'),
+                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
+                    'vhost' => env('RABBITMQ_VHOST', '/'),
+                ],
+            ],
+            'queue' => env('RABBITMQ_QUEUE', 'orders_queue'),
+
+        ],
 
     ],
 

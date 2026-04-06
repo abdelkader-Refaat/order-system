@@ -3,6 +3,7 @@
 namespace App\Queue;
 
 use App\Support\RabbitMqEndpoint;
+use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPExceptionInterface;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -43,6 +44,10 @@ final class RabbitMqOrderAmqpPublisher
             ]);
 
             $channel->basic_publish($message, '', $queue);
+            Log::info('orders:amqp: published message to queue', [
+                'order_id' => $orderId,
+                'queue' => $queue,
+            ]);
             $channel->close();
         } finally {
             if ($connection !== null) {

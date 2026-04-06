@@ -40,9 +40,10 @@ return [
     'fallback_cli_publish' => $envBool(env('ORDERS_PUBLISH_FALLBACK_CLI'), true),
 
     /*
-    | Local only: if RabbitMQ publish fails or is skipped, mark the order processed in the same
-    | request (simulates the worker). Set false when you want to test real AMQP + orders:consume.
+    | Local only: if RabbitMQ publish fails or is skipped, mark the order processed without the real
+    | worker. Default false so Docker/real-queue setups are not surprised — set ORDERS_LOCAL_MARK_…=true
+    | only for Herd-style dev without a broker.
     */
-    'dev_mark_processed_without_broker' => $envBool(env('ORDERS_LOCAL_MARK_PROCESSED_WITHOUT_BROKER'), true),
+    'dev_mark_processed_without_broker' => $envBool(env('ORDERS_LOCAL_MARK_PROCESSED_WITHOUT_BROKER'), false),
 
 ];

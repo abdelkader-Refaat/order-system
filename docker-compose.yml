@@ -25,6 +25,8 @@ services:
       SESSION_DRIVER: ${SESSION_DRIVER:-cookie}
       # Host .env often sets skip=true for Herd — in Compose the API must publish or the worker has nothing to do.
       ORDERS_SKIP_QUEUE_PUBLISH: 'false'
+      # Never fake the consumer in Compose — only the real worker should set orders to processed.
+      ORDERS_LOCAL_MARK_PROCESSED_WITHOUT_BROKER: 'false'
     env_file:
       - .env
     depends_on:
@@ -52,6 +54,7 @@ services:
       CACHE_STORE: ${CACHE_STORE:-file}
       SESSION_DRIVER: ${SESSION_DRIVER:-cookie}
       ORDERS_SKIP_QUEUE_PUBLISH: 'false'
+      ORDERS_LOCAL_MARK_PROCESSED_WITHOUT_BROKER: 'false'
     env_file:
       - .env
     depends_on:

@@ -39,7 +39,7 @@ final class RabbitMqOrdersQueuePublisher implements OrdersQueuePublisherInterfac
 
     private function publishViaCliFallback(int $orderId): bool
     {
-        if (! config('orders.fallback_cli_publish')) {
+        if (!config('orders.fallback_cli_publish')) {
             return false;
         }
 
@@ -83,7 +83,7 @@ final class RabbitMqOrdersQueuePublisher implements OrdersQueuePublisherInterfac
 
     private function failOrRethrow(int $orderId, AMQPExceptionInterface $e, string $amqpHost, int $amqpPort): void
     {
-        if (! config('orders.graceful_queue_failure')) {
+        if (!config('orders.graceful_queue_failure')) {
             throw $e;
         }
 

@@ -11,6 +11,7 @@ return [
     ],
     'order' => [
         'created' => 'Order created successfully.',
+        'retrieved' => 'Order retrieved successfully.',
     ],
     'errors' => [
         'generic' => 'Something went wrong. Please try again.',
